@@ -17,6 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/amo', [AmoController::class, "index"])->name('amo.index');
-Route::get('/amo/create', [AmoController::class, "create"])->name('amo.create');
-Route::post('/amo/create', [AmoController::class, "store"])->name('amo.store');
+Route::get('/amo', [AmoController::class, 'index'])->name('amo.index');
+Route::get('/amo/create', [AmoController::class, 'create'])->name('amo.create');
+Route::post('/amo/create', [AmoController::class, 'store'])->name('amo.store');
