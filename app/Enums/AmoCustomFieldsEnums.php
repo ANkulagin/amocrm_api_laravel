@@ -3,22 +3,13 @@
 declare(strict_types=1);
 
 namespace App\Enums;
-enum AmoCustomFieldsEnums
+enum AmoCustomFieldsEnums: string
 {
-    case EMAIL;
-    case PHONE;
-    case AGE_FIELDS_ID;
-    case GENDER_FIELDS_ID;
+    case  EMAIL = 'EMAIL';
+    case PHONE ='PHONE';
+    case AGE_FIELDS_ID = '634311';
+    case GENDER_FIELDS_ID = '647239';
 
-    public function getValue(): mixed
-    {
-        return match ($this) {
-            self::EMAIL => 'EMAIL',
-            self::PHONE => 'PHONE',
-            self::AGE_FIELDS_ID => 634311,
-            self::GENDER_FIELDS_ID => 647239,
-        };
-    }
 }
 
 
