@@ -104,47 +104,59 @@ class AmoController extends Controller
              */
             foreach ($allContact as $contact) {
                 if ($contact !== null) {
-                    if ($contact->getCustomFieldsValues()->getBy('fieldCode', AmoCustomFieldsEnums::PHONE)->getValues()->all()->getValue('value') == $phoneToCheck) {
-                        if ($contact->getLeads() !== null) {
-                            /*
-                             * @var LeadModel $lead
-                             */
-                            foreach ($contact->getLeads() as $lead) {
-                                $leadId = $lead->getId();
-                                if ($leadsService->getOne($leadId)->getStatusId() == LeadModel::WON_STATUS_ID) {
+                    $customFieldsValues = $contact->getCustomFieldsValues();
+                    if ($customFieldsValues && method_exists($customFieldsValues,'getBy')){
+                        $phoneField = $customFieldsValues->getBy('fieldCode', 'PHONE');
+                        if ($phoneField && method_exists($phoneField, 'getValues')){
+                            $phoneValues = $phoneField->getValues()->all();
+                            foreach ($phoneValues as $phoneValue) {
+                                if (method_exists($phoneValue, 'getValue')) {
+                                    $currentPhoneValue = $phoneValue->getValue('value');
+                                    if ($currentPhoneValue == $phoneToCheck) {
+                                        if ($contact->getLeads() !== null) {
+                                            /*
+                                             * @var LeadModel $lead
+                                             */
+                                            foreach ($contact->getLeads() as $lead) {
+                                                $leadId = $lead->getId();
+                                                if ($leadsService->getOne($leadId)->getStatusId() == LeadModel::WON_STATUS_ID) {
 
-                                    $customer = new CustomerModel();
-                                    $customer->setName('Созданный покупатель ');
-                                    $customersService = $apiClient->customers();
+                                                    $customer = new CustomerModel();
+                                                    $customer->setName('Созданный покупатель ');
+                                                    $customersService = $apiClient->customers();
 
-                                    try {
-                                        $customer = $customersService->addOne($customer);
-                                        $apiClient->customers()->link($customer, $contact);
-                                        //notes
-                                        $file = $apiClient->files()->get()->first();
-                                        //Создадим примечание с файлом
-                                        $noteModel = new AttachmentNote();
-                                        $noteModel->setEntityId($customer->getId())
-                                            ->setFileName($file->getFileName()) // название файла, которое будет отображаться в примечании
-                                            ->setVersionUuid($file->getVersionUuid())
-                                            ->setFileUuid($file->getUuid());
-                                        try {
-                                            $customerNotesService = $apiClient->notes(EntityTypesInterface::CUSTOMERS);
-                                            $noteModel = $customerNotesService->addOne($noteModel);
-                                        } catch (AmoCRMApiException $e) {
-                                            echo $e->getMessage();
-                                            $this->printError($e);
+                                                    try {
+                                                        $customer = $customersService->addOne($customer);
+                                                        $apiClient->customers()->link($customer, $contact);
+                                                        //notes
+                                                        $file = $apiClient->files()->get()->first();
+                                                        //Создадим примечание с файлом
+                                                        $noteModel = new AttachmentNote();
+                                                        $noteModel->setEntityId($customer->getId())
+                                                            ->setFileName($file->getFileName()) // название файла, которое будет отображаться в примечании
+                                                            ->setVersionUuid($file->getVersionUuid())
+                                                            ->setFileUuid($file->getUuid());
+                                                        try {
+                                                            $customerNotesService = $apiClient->notes(EntityTypesInterface::CUSTOMERS);
+                                                            $noteModel = $customerNotesService->addOne($noteModel);
+                                                        } catch (AmoCRMApiException $e) {
+                                                            echo $e->getMessage();
+                                                            $this->printError($e);
+                                                        }
+                                                    } catch (AmoCRMApiException $e) {
+                                                        echo $e->getMessage();
+                                                        $this->printError($e);
+                                                    }
+                                                    return response()->json(['success' => true]);
+                                                }
+                                            }
+                                            return response()->json(['success' => true]);
                                         }
-                                    } catch (AmoCRMApiException $e) {
-                                        echo $e->getMessage();
-                                        $this->printError($e);
+                                        return response()->json(['success' => true]);
                                     }
-                                    return response()->json(['success' => true]);
                                 }
                             }
-                            return response()->json(['success' => true]);
                         }
-                        return response()->json(['success' => true]);
                     }
                 }
             }
