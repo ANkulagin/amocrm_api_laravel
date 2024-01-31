@@ -181,7 +181,7 @@ class AmoController extends Controller
             $customFields = new CustomFieldsValuesCollection();
             $contact->setCustomFieldsValues($customFields);
             //PHONE
-            $phoneField = (new MultitextCustomFieldValuesModel())->setFieldCode(AmoCustomFieldsEnums::getAmoCustomFields(AmoCustomFieldsEnums::PHONE));
+            $phoneField = (new MultitextCustomFieldValuesModel())->setFieldCode(AmoCustomFieldsEnums::PHONE->getValue());
             $customFields->add($phoneField);
             // Установка значения поля
             $phoneField->setValues(
@@ -193,7 +193,7 @@ class AmoController extends Controller
                     )
             );
             //EMAIL
-            $emailField = (new TextCustomFieldValuesModel())->setFieldCode(AmoCustomFieldsEnums::getAmoCustomFields(AmoCustomFieldsEnums::EMAIL));
+            $emailField = (new TextCustomFieldValuesModel())->setFieldCode(AmoCustomFieldsEnums::EMAIL->getValue());
             $customFields->add($emailField);
             // Установка значения поля
             $emailField->setValues(
@@ -205,7 +205,7 @@ class AmoController extends Controller
             );
             //AGE
             // Проверка наличия поля 'Возвраст' по ID
-            $ageField = (new TextCustomFieldValuesModel())->setFieldId(AmoCustomFieldsEnums::getAmoCustomFields(AmoCustomFieldsEnums::AGE_FIELDS_ID));
+            $ageField = (new TextCustomFieldValuesModel())->setFieldId(AmoCustomFieldsEnums::AGE_FIELDS_ID->getValue());
             $customFields->add($ageField);
             // Установка значения поля
             $ageField->setValues(
@@ -216,7 +216,7 @@ class AmoController extends Controller
                     )
             );
             //GENDER
-            $genderField = (new TextCustomFieldValuesModel())->setFieldId(AmoCustomFieldsEnums::getAmoCustomFields(AmoCustomFieldsEnums::GENDER_FIELDS_ID));
+            $genderField = (new TextCustomFieldValuesModel())->setFieldId(AmoCustomFieldsEnums::GENDER_FIELDS_ID->getValue());
             $customFields->add($genderField);
             // Установка значения поля
             $genderField->setValues(
