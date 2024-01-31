@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use AmoCRM\Collections\CatalogElementsCollection;
@@ -46,7 +48,7 @@ class AmoController extends Controller
         ]);
     }
 
-    public function create(Request $request):\Illuminate\View\View
+    public function create(Request $request): \Illuminate\View\View
     {
         $apiClient = new \AmoCRM\Client\AmoCRMApiClient(env('AMOCRM_CLIENT_ID'), env('AMOCRM_CLIENT_SECRET'), env('AMOCRM_REDIRECT_URI'));
         if (isset($_GET['code'])) {
@@ -99,7 +101,7 @@ class AmoController extends Controller
             $leadsService = $apiClient->leads();
             $phoneToCheck = $request->json('phone');
             $allContact = $apiClient->contacts()->get(with: ['leads'])->all();
-            /*
+            /**
              * @var ContactModel $contact
              */
             foreach ($allContact as $contact) {
@@ -109,6 +111,9 @@ class AmoController extends Controller
                         $phoneField = $customFieldsValues->getBy('fieldCode', AmoCustomFieldsEnums::PHONE);
                         if ($phoneField && method_exists($phoneField, 'getValues')){
                             $phoneValues = $phoneField->getValues()->all();
+                            /**
+                             * @var MultitextCustomFieldValueModel $phoneValue
+                             */
                             foreach ($phoneValues as $phoneValue) {
                                 if (method_exists($phoneValue, 'getValue')) {
                                     $currentPhoneValue = $phoneValue->getValue('value');
@@ -119,8 +124,7 @@ class AmoController extends Controller
                                              */
                                             foreach ($contact->getLeads() as $lead) {
                                                 $leadId = $lead->getId();
-                                                if ($leadsService->getOne($leadId)->getStatusId() == LeadModel::WON_STATUS_ID) {
-
+                                                if ($leadsService->getOne($leadId)->getStatusId() === LeadModel::WON_STATUS_ID) {
                                                     $customer = new CustomerModel();
                                                     $customer->setName('Созданный покупатель ');
                                                     $customersService = $apiClient->customers();
