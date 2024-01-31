@@ -106,7 +106,7 @@ class AmoController extends Controller
                 if ($contact !== null) {
                     $customFieldsValues = $contact->getCustomFieldsValues();
                     if ($customFieldsValues && method_exists($customFieldsValues,'getBy')){
-                        $phoneField = $customFieldsValues->getBy('fieldCode', 'PHONE');
+                        $phoneField = $customFieldsValues->getBy('fieldCode', AmoCustomFieldsEnums::PHONE);
                         if ($phoneField && method_exists($phoneField, 'getValues')){
                             $phoneValues = $phoneField->getValues()->all();
                             foreach ($phoneValues as $phoneValue) {
